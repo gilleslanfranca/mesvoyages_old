@@ -7,21 +7,22 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Description of AcceuilController
  *
  * @author lanfr
  */
-class AcceuilController {
+class AcceuilController extends AbstractController{
     //put your code here
-    
+
     /**
+     * Route ("/", name="acceuil")
      * @return Response
      */
     public function index(): Response{
-        return new Response('Hello world !');
+        return $this->render("pages/acceuil.html.twig");
         
     }
 }
