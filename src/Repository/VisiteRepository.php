@@ -47,4 +47,11 @@ class VisiteRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+   public function findAllOrderBy($champ, $ordre): array{
+       return $this->createQueryBuilder('v')
+               ->orderBy('v.'.$champ, $ordre)
+               ->getQuery()
+               ->getResult();
+   }
 }
