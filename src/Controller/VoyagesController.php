@@ -19,6 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class VoyagesController extends AbstractController{
     //put your code here
 
+    
+
     /**
      * @Route ("/voyages", name="voyages")
      * @return Response
