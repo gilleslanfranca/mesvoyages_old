@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Visite;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @method Visite|null find($id, $lockMode = null, $lockVersion = null)
@@ -53,5 +54,28 @@ class VisiteRepository extends ServiceEntityRepository
                ->orderBy('v.'.$champ, $ordre)
                ->getQuery()
                ->getResult();
+   }
+   
+   /**
+    * Enregistrements dont un champ est egal à une valeur
+    * ou bien à tous les enregistrements si aucune valeur
+    * @param type $champ
+    * @param type $valeur
+    * @return Visite[]
+    */
+   public function findByEqualValue($champ, $valeur): array{
+       if($valeur==""){
+           return $this->createQueryBuilder('v')
+                   ->orderBy('v.'.$champ, 'ASC')
+                   ->getQuery()
+                   ->getResult();
+       }else{
+           return $this->createQueryBuilder('v')
+                   ->where('v.'.$champ.'=:valeur')
+                   ->setParameter('valeur', $valeur)
+                   ->orderBy('v.datecreation', 'DESC')
+                   ->getQuery()                   
+                   ->getResult();
+       }
    }
 }
