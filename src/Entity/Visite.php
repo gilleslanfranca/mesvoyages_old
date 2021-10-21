@@ -6,9 +6,14 @@ use App\Repository\VisiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=VisiteRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\VisiteRepository")
+ * @Vich\Uploadable
  */
 class Visite
 {
@@ -58,7 +63,27 @@ class Visite
      * @ORM\ManyToMany(targetEntity=Environnement::class)
      */
     private $environnements;
+    
+    /**
+     * @Vich\UploadableField(mapping="visites", fileNameProperty="imageName")
+     * @Assert\Image(mimeTypes="image/jpeg")
+     * @var type File|null
+     */
+    private $imageFile;
+    
+    /**
+     * 
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * 
+     * @var string|null
+     */
+    private $imageName;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
+    
     public function __construct()
     {
         $this->environnements = new ArrayCollection();
@@ -181,4 +206,44 @@ class Visite
 
         return $this;
     }
+    
+    function getImageFile(): ?File 
+    {
+        return $this->imageFile;
+    }
+
+    function getImageName(): ?string 
+    {
+        return $this->imageName;
+    }
+
+    function setImageFile(File $imageFile): self
+    {
+        $this->imageFile = $imageFile;
+        if($this->imageFile instanceof UploadedFile){
+            $this->updated_at = new \DateTime('now');
+        }
+        return $this;
+    }
+
+    function setImageName($imageName): self 
+    {
+        $this->imageName = $imageName;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+
+    
 }
